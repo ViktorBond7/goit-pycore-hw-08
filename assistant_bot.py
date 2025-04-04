@@ -1,7 +1,18 @@
 from input_error import input_error
 from classes import AddressBook, Record
 from parse_input import parse_input
+import pickle
 
+def save_data(book, filename="addressbook.pkl"):
+    with open(filename, "wb") as f:
+        pickle.dump(book, f)
+
+def load_data(filename="addressbook.pkl"):
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return AddressBook()
 
 @input_error   
 def add_contact(args, book: AddressBook):
@@ -81,7 +92,8 @@ def birthdays(book: AddressBook):
 
 
 def main():
-    book = AddressBook()
+    book = load_data() 
+
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
@@ -110,6 +122,7 @@ def main():
             case _:
                 print("Invalid command.")
 
+    save_data(book)  # Викликати перед виходом з програми
 
 if __name__ == "__main__":
     main()
